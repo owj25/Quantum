@@ -11,10 +11,9 @@ backend = FakeOsaka()
 
 circuit = QuantumCircuit(r, r)
 
-for i in range(r):
-    circuit.h(i)
-for j in range(r):
-    circuit.measure(j, j)
+circuit.h([i for i in range(r)])
+
+circuit.measure([j for j in range(r)], [h for h in range(r)])
 
 
 transpiled_circuit = transpile(circuit, backend)
@@ -22,7 +21,9 @@ transpiled_circuit = transpile(circuit, backend)
 
 # Run the transpiled circuit using the simulated fake backend
 
-job = backend.run(transpiled_circuit, shots=100)
+job = backend.run(transpiled_circuit, shots=1)
 result = int(max(job.result().get_counts()), 2)
 
 print(f"Random Number: {result}")
+
+x = job.result().get_counts().keys()
